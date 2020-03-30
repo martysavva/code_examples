@@ -1,0 +1,28 @@
+@import 'src/assets/global-styles/colors';
+
+.disclosure {
+  padding-top: 10px;
+  p {
+    padding-bottom: 15px;
+  }
+}
+
+$iconSize: 41px;
+$paraOffset: 14px;
+
+.marketing-rules {
+  .green-padlock {
+    position: absolute;
+    color: $lvGreen1;
+    font-size: $iconSize;
+    top: 15px;
+    left: 12px;
+  }
+  p {
+    padding-left: $iconSize + $paraOffset;
+  }
+}
+
+.otherTitleTextInput {
+  margin-top: 10px;
+}

@@ -1,0 +1,535 @@
+<div menu></div>
+
+<div class="container body-content settings footer-fix">
+	<div class="row">
+		<div class="col-sm-10 col-sm-offset-1">
+			<h1>System settings</h1>
+			<div class="section">
+				<button
+					id="add-system-btn"
+					class="btn btn-energynote-green full-width-xs btn-sm"
+					ui-sref="create-system">
+					+ new system
+				</button>
+			</div>
+
+
+			<div class="section" ng-show="vm.selectSystem">
+				<form class="switch-system-form form-inline">
+					<label for="switch-system-select" class="label1">Switch system to</label>
+					<select
+						id="switch-system-select"
+						class="form-control"
+						ng-options="item.name for item in vm.userSystemsOptions"
+						ng-model="vm.userSystem"
+						ng-change="vm.disableSwitchButton()">
+					</select>
+					<button
+						id="switch-system-btn"
+						class="btn btn-energynote-green full-width-xs btn-sm"
+						ng-click="vm.switchSystem()"
+						ng-disabled="vm.isSwitchButtonDisabled">
+						Switch system
+					</button>
+				</form>
+			</div>
+
+
+			<div class="section" ng-show="vm.systemSettings">
+
+				<!--error messages-->
+				<div class="row">
+					<div class="col-sm-10 col-sm-offset-1">
+						<div id="error-panel" class="panel panel1 margin-bottom-15" ng-show="vm.showAlert">
+							<div class="panel-body">
+								<button id="close-btn" type="button" class="close btn-xs size-10" ng-click="vm.closeAlert()">
+									<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+								</button>
+								<span class="geo-glyphicon geo-glyphicon-info success-icon" aria-hidden="true" ng-show="vm.messageType === 'success'"></span>
+								<span class="geo-glyphicon geo-glyphicon-warning fail-icon" aria-hidden="true" ng-show="vm.messageType === 'fail'"></span>
+								<span class="text" ng-class="vm.messageType + '-text'"><span ng-bind-html="vm.alertMessage"></span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--end error messages-->
+
+
+				<!--form-->
+				<form id="settings-form" name="vm.settingsForm" class="login-form" novalidate>
+					<h4>'{{vm.settings.name}}' settings</h4>
+
+					<div class="accordion">
+
+
+						<!--settings-->
+						<div id="system-settings-tab" class="head"  ng-class="{'active': vm.tab === 0}">
+							<span ng-click="vm.showTab(0)"><span class="geo-glyphicon" ng-class="{'geo-glyphicon-chev-down-small size-20': vm.tab === 0, 'geo-glyphicon-chev-right-small size-20': vm.tab != 0}"></span> System settings</span>
+							<span ng-click="vm.show1 = !vm.show1" class="pull-right" ng-show="vm.tab === 0">
+								<span class="geo-glyphicon geo-glyphicon-info size-plus-2"></span>
+							</span>
+						</div>
+						<div class="body-white" ng-show="vm.tab === 0">
+							<!--help-->
+							<div class="row help" ng-show="vm.show1">
+								<div class="col-xs-10 col-xs-offset-1">
+									<div class="panel">
+										<button id="close-btn" type="button"  class="close btn-xs size-10" ng-click="vm.show1 = !vm.show1">
+											<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+										</button>
+										<h5>System details</h5>
+										You can give your system a nickname, to make it easier to switch between multiple systems.
+										<br><br>Please also enter the country, post code and time zone the system is in
+									</div>
+								</div>
+							</div>
+							<!--end help-->
+							<div class="row">
+								<div class="col-sm-12">
+									<label class="label1" >System ID:</label> {{vm.currentSystem}}
+								</div>
+							</div>
+							<div class="row margin-top-5">
+								<div class="col-sm-12 form-inline">
+									<div>
+										<label for="system-name-field" class="label1">System name</label>
+										<input
+											id="system-name-field"
+											name="name"
+											class="form-control"
+											type="text"
+											placeholder="system name"
+											ng-model="vm.settings.name"
+											minlength="4"
+											required>
+									</div>
+									<div>
+										<label for="system-country-field" class="label1">Country</label>
+										<country-select
+												id="system-country-field"
+												name="country"
+												class="form-control select-indent"
+												ng-model="vm.settings.country">
+										</country-select>
+
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-12 form-inline">
+									<div>
+										<label for="system-postcode-field" class="label1">Postcode</label>
+										<input
+											id="system-postcode-field"
+											class="form-control select-indent"
+											name="postCode"
+											type="text"
+											placeholder="postcode"
+											ng-model="vm.settings.postCode"
+											required
+											ng-minlength="1"
+											ng-maxlength="20">
+									</div>
+									<div>
+										<label for="system-timezone-select" class="label1">Timezone</label>
+										<select
+											id="system-timezone-select"
+											aria-hidden="false"
+											class="form-control input"
+											name="timeZone"
+											ng-options="locationOptions.value as locationOptions.label for locationOptions in vm.locationOptions"
+											ng-model="vm.settings.timeZoneValue.timeZone">
+					                    </select>
+				                    </div>
+								</div>
+							</div>
+						</div>
+
+
+						<!--budget and tariff-->
+						<div id="budget-and-tariff-tab" class="head"  ng-class="{'active': vm.tab === 1}">
+							<span ng-click="vm.showTab(1)"><span class="geo-glyphicon" ng-class="{'geo-glyphicon-chev-down-small size-20': vm.tab === 1, 'geo-glyphicon-chev-right-small size-20': vm.tab != 1}"></span> Budget and tariff settings</span>
+							<span ng-click="vm.show2 = !vm.show2" class="pull-right" ng-show="vm.tab === 1">
+								<span class="geo-glyphicon geo-glyphicon-info size-plus-2"></span>
+							</span>
+						</div>
+						<div class="body-white" ng-show="vm.tab === 1" >
+							<!--help-->
+							<div class="row help" ng-show="vm.show2">
+								<div class="col-xs-10 col-xs-offset-1">
+									<div class="panel">
+										<button id="close-btn" type="button" class="close btn-xs size-10" ng-click="vm.show2 = !vm.show2">
+											<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+										</button>
+										<h5>Budget settings</h5>
+										Set your budget according to how much you are prepared to spend on electricity per day. If you use less electricity, you will see that you're under budget, if you use more then you'll see that you're over your budget.
+										<h5>Electricity tariff</h5>
+										Check your bill to see if a daily standing charge is applied to your electricity tariff. If it is, enter it below. You will also need to check your electricity bill for the cost per unit (cost per kWh) value and enter it here.
+									</div>
+								</div>
+							</div>
+							<!--help-->
+							<div class="row">
+								<div class="col-sm-10 col-sm-offset-1">
+									<div class="info-panel" ng-show="vm.info1">
+										content here
+									</div>
+								</div>
+							</div>
+							<div class="row margin-top-5">
+								<div class="col-sm-12 form-inline">
+									<label for="budget-field" class="label2">Budget (<span translate>CURRENCY.POUNDS</span>/day)</label>
+									<input
+										id="budget-field"
+										class="form-control"
+										name="budget"
+										type="text"
+										placeholder="budget"
+										ng-model="vm.settings.budget"
+										ng-pattern="vm.patternNumbers"
+										uib-popover="Set your budget according to how much you are prepared to spend on electricity per day. If you use less electricity, you will see that you're under budget, if you use more then you'll see that you're over your budget."
+										popover-trigger="focus">
+								</div>
+							</div>
+							<div class="row margin-top-5">
+								<div class="col-sm-12 form-inline">
+									<label for="standing-charge-field" class="label2">Standing charge</label>
+									<input
+											id="standing-charge-field"
+											class="form-control"
+											name="importStandingChargeCost"
+											type="text"
+											placeholder="standing charge"
+											ng-model="vm.settings.tariffDetails.importStandingChargeCost"
+											ng-pattern="vm.patternNumbers"
+											uib-popover="Check your bill to see if a daily standing charge is applied to your electricity tariff. If it is, enter it here."
+											popover-trigger="focus"> <span translate>CURRENCY.PENCE</span>
+								</div>
+							</div>
+							<div class="row margin-top-10">
+								<div class="col-sm-12">
+									<h4>Tariff settings</h4>
+								</div>
+
+
+
+								<!--tariff 1-->
+								<div class="col-sm-12">
+									<h5>Tariff 1</h5>
+									<div class="form-inline form-indent">
+										<label for="tariff1-field" class="label3">Cost</label><span class="grey hidden-sm hidden-md hidden-lg">&nbsp;(<span translate>CURRENCY.PENCE</span>/kWh)</span>
+										<input
+											id="tariff1-field"
+											class="form-control"
+											name="defaultCost"
+											type="text"
+											placeholder="cost"
+											ng-model="vm.settings.tariffDetails.defaultCost"
+											ng-pattern="vm.patternNumbers"
+											uib-popover="Check your electricity bill for the cost per unit (cost per kWh) value and enter it here."
+											popover-trigger="focus"> <span class="hidden-xs"><span translate>CURRENCY.PENCE</span>/kWh</span>
+									</div>
+								</div>
+
+
+
+								<!--tariff 2-->
+								<div class="col-sm-12 margin-top-10">
+									<button
+											id="add-t2-btn"
+											class="btn btn-energynote-green full-width-xs btn-sm pull-right"
+											ng-click="vm.hasTariff2 = true; vm.showTariffSaveMessage()"
+											ng-show="!vm.hasTariff2">
+										Add a second Tariff
+									</button>
+								</div>
+								<div class="col-sm-12 margin-top-10" ng-show="vm.hasTariff2">
+									<h5>Tariff 2</h5>
+									<div class="form-inline form-indent">
+										<label for="tariff2-field" class="label3">Cost</label><span class="grey hidden-sm hidden-md hidden-lg">&nbsp;(<span translate>CURRENCY.PENCE</span>/kWh)</span>
+										<input id="tariff2-field"
+											   class="form-control"
+											   name="tariff2Cost"
+											   type="text"
+											   placeholder="cost"
+											   ng-model="vm.settings.tariffDetails.tariffCostPence.IMPORT_T2"
+											   ng-pattern="vm.patternNumbers"
+											   uib-popover="Check your electricity bill for the cost per unit (cost per kWh) value and enter it here."
+											   popover-trigger="focus"> <span class="hidden-xs"><span translate>CURRENCY.PENCE</span>/kWh</span>
+									</div>
+									<div class="form-indent">
+										<div class="time-container">
+											<div class="form-inline">
+												<label class="time-label">between: </label>
+												<select
+													id="start-hour-select"
+													name="startHourSelect"
+													aria-hidden="false"
+													class="form-control input time-select"
+							                        ng-options="hourOptions.value as hourOptions.label for hourOptions in vm.hourOptions"
+							                        ng-model="vm.t2Time.startHour">
+							                    </select>
+							                    <span class="select-hour-minute-space">:</span>
+							                    <select
+													id="start-minute-select"
+													aria-hidden="false"
+													class="form-control input time-select"
+							                        ng-options="minuteOptions.value as minuteOptions.label for minuteOptions in vm.minuteOptions"
+							                        ng-model="vm.t2Time.startMin">
+							                    </select>
+							                </div>
+							            </div>
+						                <div class="time-container">
+
+							                <div class="form-inline">
+							                	<label class="time-label">and: </label>
+							                    <select
+													id="end-hour-select"
+													aria-hidden="false"
+													class="form-control input time-select"
+							                        ng-options="hourOptions.value as hourOptions.label for hourOptions in vm.hourOptions"
+							                        ng-model="vm.t2Time.endHour">
+							                    </select>
+							                    <span class="select-hour-minute-space">:</span>
+							                    <select
+													id="end-minute-select"
+													aria-hidden="false"
+													class="form-control input time-select"
+							                        ng-options="minuteOptions.value as minuteOptions.label for minuteOptions in vm.minuteOptions"
+							                        ng-model="vm.t2Time.endMin">
+							                    </select>
+						                    </div>
+					                    </div>
+										<button
+												id="delete-t3-btn"
+												class="btn btn-energynote-green full-width-xs btn-sm margin-top-15"
+												ng-click="vm.hasTariff2 = false; vm.showTariffSaveMessage()"
+												ng-show="!vm.hasTariff3">
+											Remove second Tariff
+										</button>
+									</div>
+								</div>
+
+
+
+
+								<!--tariff 3-->
+								<div class="col-sm-12 margin-top-10">
+									<button
+											id="add-t3-btn"
+											class="btn btn-energynote-green full-width-xs btn-sm pull-right"
+											ng-click="vm.hasTariff3 = true; vm.showTariffSaveMessage()"
+											ng-show="!vm.hasTariff3 && vm.hasTariff2">
+										add a third Tariff
+									</button>
+								</div>
+								<div class="col-sm-12 margin-top-10" ng-show="vm.hasTariff3">
+									<h5>Tariff 3</h5>
+									<div class="form-inline form-indent">
+										<label for="tariff3-field" class="label3">Cost</label><span class="grey hidden-sm hidden-md hidden-lg">&nbsp;(<span translate>CURRENCY.PENCE</span>/kWh)</span>
+										<input id="tariff3-field"
+											   class="form-control"
+											   name="tariff3Cost"
+											   type="text"
+											   placeholder="cost"
+											   ng-model="vm.settings.tariffDetails.tariffCostPence.IMPORT_T3"
+											   ng-pattern="vm.patternNumbers"
+											   uib-popover="Check your electricity bill for the cost per unit (cost per kWh) value and enter it here."
+											   popover-trigger="focus"> <span class="hidden-xs"><span translate>CURRENCY.PENCE</span>/kWh</span>
+									</div>
+									<div class="form-indent">
+										<div class="time-container">
+											<div class="form-inline">
+												<label class="time-label">between: </label>
+												<select
+													id="t3-start-hour-select"
+													aria-hidden="false"
+													class="form-control input time-select"
+							                        ng-options="hourOptions.value as hourOptions.label for hourOptions in vm.hourOptions"
+							                        ng-model="vm.t3Time.startHour">
+							                    </select>
+							                    <span class="select-hour-minute-space">:</span>
+							                    <select
+													id="t3-start-minute-select"
+													aria-hidden="false"
+													class="form-control input time-select"
+							                        ng-options="minuteOptions.value as minuteOptions.label for minuteOptions in vm.minuteOptions"
+							                        ng-model="vm.t3Time.startMin">
+							                    </select>
+							                </div>
+							            </div>
+						                <div class="time-container">
+							                <div class="form-inline">
+							                	<label class="time-label">and: </label>
+							                    <select
+													id="t3-end-hour-select"
+													aria-hidden="false"
+													class="form-control input time-select"
+							                        ng-options="hourOptions.value as hourOptions.label for hourOptions in vm.hourOptions"
+							                        ng-model="vm.t3Time.endHour">
+							                    </select>
+							                    <span class="select-hour-minute-space">:</span>
+							                    <select
+													id="t3-end-minute-select"
+													aria-hidden="false"
+													class="form-control input time-select"
+							                        ng-options="minuteOptions.value as minuteOptions.label for minuteOptions in vm.minuteOptions"
+							                        ng-model="vm.t3Time.endMin">
+							                    </select>
+						                    </div>
+					                    </div>
+										<button
+												id="delete-t3-btn"
+												class="btn btn-energynote-green full-width-xs btn-sm margin-top-15"
+												ng-click="vm.hasTariff3 = false; vm.showTariffSaveMessage()">
+											remove third Tariff
+										</button>
+									</div>
+								</div>
+
+							</div>
+							
+						</div>
+
+						<!--microgen settings-->
+						<div id="microgen-settings-tab" class="head"  ng-class="{'active': vm.tab === 2}">
+							<span ng-click="vm.showTab(2)"><span class="geo-glyphicon" ng-class="{'geo-glyphicon-chev-down-small size-20': vm.tab === 2, 'geo-glyphicon-chev-right-small size-20': vm.tab != 2}"></span> Microgen settings</span>
+							<span ng-click="vm.show3 = !vm.show3" class="pull-right" ng-show="vm.tab === 2">
+								<span class="geo-glyphicon geo-glyphicon-info size-plus-2"></span>
+							</span>
+						</div>
+
+						<div class="body-white" ng-show="vm.tab === 2">
+							<!--help-->
+							<div class="row help"  ng-show="vm.show3">
+								<div class="col-xs-10 col-xs-offset-1">
+									<div class="panel">
+										<button id="close-btn" type="button" class="close btn-xs size-10" ng-click="vm.show3 = !vm.show3">
+											<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+										</button>
+										<h5>Microgeneration Tariff</h5>
+										Please refer to your tariff documentation and enter the FiT (generation) tariff that you receive for your electricity generation. Deeming is used to calculate payments for microgeneration installations that do not include an export meter. Please enter a deeming value below if you do not have an export meter - usually your export is deemed to be 50% of your total generation, in which case you should enter 50 in the Deeming field.
+										<br><br>The export rate is the amount, per kWh, that you are paid for exporting electricity to the grid. Check your export tariff documentation for this value.
+									</div>
+								</div>
+							</div>
+							<!--end help-->
+
+							<div class="col-sm-12">
+								<h5>Microgen settings</h5>
+								<div class="form-inline form-indent">
+									<label for="kwp-rating-field" class="label2">kWp rating</label>
+									<input id="kwp-rating-field"
+										   class="form-control"
+										   name="pvSize"
+										   type="text"
+										   placeholder="kwp rating"
+										   ng-model="vm.settings.pvSize"
+										   ng-pattern="vm.patternNumbers"
+										   uib-popover="kWp stands for kilo Watt peak. It is the rating of your microgeneration array, according to its potential output. You should have been given the kWp value of your array upon installation and you can enter it here so that your generation graphs scale correctly. This should be between 0.00 and 99.99"
+										   popover-trigger="focus">
+								</div>
+								<div class="form-inline form-indent">
+									<label for="prior-earnings-field" class="label2">Prior earnings <span class="grey">(<span translate>CURRENCY.POUNDS</span>)</span></label>
+									<input id="prior-earnings-field"
+										   class="form-control"
+										   name="pvPrior"
+										   type="text"
+										   placeholder="prior earnings"
+										   ng-model="vm.settings.pvPrior"
+										   ng-pattern="vm.patternNumbers"
+										   uib-popover="If your microgeneration system was up and running before you installed your microgen display, you may wish to add any prior income you received here. This value will be added to the total value collected by your microgen display."
+										   popover-trigger="focus">
+								</div>
+							</div>
+
+							<!--microgeneration settings-->
+							<div class="col-sm-12">
+								<h5>Microgeneration tariff</h5>
+								<select
+										id="microgen-select"
+										name="microgen-select"
+										class="form-control margin-top-10"
+										ng-options="option.name for option in vm.microgenOptions track by option.id"
+										ng-model="vm.microgenOptionSelected"
+										>
+								</select>
+
+
+
+								<div class="form-inline form-indent"
+									 ng-show="vm.microgenOptionSelected.id === vm.microgenOptions[0].id">
+									<label for="generation-tariff-field" class="label2">Generation tariff</label><span class="grey hidden-sm hidden-md hidden-lg">&nbsp;(<span translate>CURRENCY.PENCE</span>/kWh)</span>
+									<input id="generation-tariff-field"
+										   name="generationCost"
+										   class="form-control"
+										   type="text"
+										   placeholder="generation tariff"
+										   ng-model="vm.settings.tariffDetails.generationCost"
+										   ng-pattern="vm.patternNumbers"
+										   uib-popover="Refer to your tariff documentation and enter the FiT (generation) tariff that you receive for your electricity generation."
+										   popover-trigger="focus"> <span class="hidden-xs"><span translate>CURRENCY.PENCE</span>/kWh</span>
+								</div>
+								<div class="form-inline form-indent"
+									 ng-show="vm.microgenOptionSelected.id === vm.microgenOptions[0].id">
+									<label for="deeming-field" class="label2">Export tariff</label><span class="grey hidden-sm hidden-md hidden-lg">&nbsp;<span translate>CURRENCY.PENCE</span>/kWh (deemed 50% exported)</span>
+									<input id="deeming-field"
+										   name="deemingCost"
+										   class="form-control"
+										   type="text"
+										   placeholder="export tariff"
+										   ng-model="vm.settings.tariffDetails.deemingCost"
+										   ng-pattern="vm.patternNumbers"
+										   uib-popover="The export rate is the amount, per kWh, that you are paid for exporting electricity to the grid - you will have been deemed to have exported 50% of your generated electricity"
+										   popover-trigger="focus"> <span class="hidden-xs"><span translate>CURRENCY.PENCE</span>/kWh (deemed 50% exported)</span>
+								</div>
+								<div class="form-inline form-indent"
+									 ng-show="vm.microgenOptionSelected.id === vm.microgenOptions[1].id">
+									<label for="export-field" class="label2">export tariff</label> <span class="grey hidden-sm hidden-md hidden-lg">&nbsp;(<span translate>CURRENCY.PENCE</span>/kWh)</span>
+									<input id="export-field"
+										   name="exportCost"
+										   class="form-control"
+										   type="text"
+										   placeholder="export tariff"
+										   ng-model="vm.settings.tariffDetails.exportCost"
+										   ng-pattern="vm.patternNumbers"
+										   uib-popover="The export rate is the amount, per kWh, that you are paid for exporting electricity to the grid. Check your export tariff documentation for this value."
+										   popover-trigger="focus"> <span class="hidden-xs"><span translate>CURRENCY.PENCE</span>/kWh</span>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<!--downloads-->
+					<div class="col-sm-6 margin-top-10">
+						<select
+								id="downloads-select"
+								name="downloads"
+								class="form-control form-inline margin-top-10"
+								ng-options="option.name for option in vm.downloadOptions track by option.id"
+								ng-model="vm.downloads">
+						</select>
+						<button
+								id="download-btn"
+								class="btn btn-energynote-green full-width-xs btn-sm pull-right margin-top-10"
+								ng-click="vm.download(vm.downloads.id)">
+							Download
+						</button>
+					</div>
+					<!--submit-->
+					<div class="col-sm-6 margin-top-10">
+						<button
+								id="submit-btn"
+								class="btn btn-energynote-green full-width-xs btn-sm pull-right"
+								ng-click="vm.attemptSave()">
+							Submit
+						</button>
+					</div>
+				</form>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+<div footer></div>

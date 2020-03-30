@@ -1,0 +1,55 @@
+<div stannah-menu></div>
+<div class="container stannah-activity footer-fix">
+    <div class="row">
+        <div class="col-xs-12 col-sm-4 nopadding" >
+            <div monitoree class="monitoree"></div>
+        </div>
+
+        <div class="col-xs-12 col-sm-8">
+
+            <!--error messages-->
+            <div id="error-panel" class="panel panel1" ng-show="vm.showAlert">
+                <div class="panel-body">
+                    <button id="close-btn" type="button" class="close btn-xs size-10" ng-click="vm.closeAlert()">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </button>
+                    <span class="geo-glyphicon geo-glyphicon-info success-icon" aria-hidden="true" ng-show="vm.messageType === 'success'"></span>
+                    <span class="geo-glyphicon geo-glyphicon-warning fail-icon" aria-hidden="true" ng-show="vm.messageType === 'fail'"></span>
+                    <span class="text" ng-class="vm.messageType + '-text'"><span ng-bind-html="vm.alertMessage"></span></span>
+                </div>
+            </div>
+            <!--end error messages-->
+
+            <div class="activity-list">
+                <ul>
+                    <li ng-repeat="event in vm.activityData.data._allEvents | orderBy:'reverse':true">
+                        <!--Message Icon/Image-->
+                        <div class="circle-image" ng-if="event.type === vm.STANNAH_EVENTS.devices.message">
+                            <!--Icon-->
+                            <span class="geo-glyphicon geo-glyphicon-network-user {{vm.displayMessageIcon(event.from)}}"
+                                  ng-if="vm.userHasImage(event.from) === false"></span>
+                            <!--Image-->
+                            <div class="thumb-container"
+                                 ng-if="vm.userHasImage(event.from) === true">
+                                <img class="thumb"
+                                     ng-src="{{vm.imagePath.getImagePath() + vm.getUserImageHash(event.from)}}" />
+                            </div>
+                        </div>
+
+                        <!--Other Icons-->
+                        <div class="circle-image" ng-if="event.type != vm.STANNAH_EVENTS.devices.message">
+                            <span class="geo-glyphicon {{vm.displayIcon(event)}}"></span>
+                        </div>
+                        <div class="text">
+                            {{vm.displayMessageSender(event)}}{{vm.displayMessage(event)}}
+                        </div>
+                        <div class="time">
+                           <span class="day">{{vm.displayTime(event.activityTimestamp, true)}}</span> {{vm.displayTime(event.activityTimestamp)}}
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div footer class="hidden-sm hidden-md hidden-lg"></div>
